@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Exclude API endpoints and authenticated user areas from crawling
+Disallow: /api/
+Disallow: /calculator
+Disallow: /consult
+Disallow: /dashboard
+Disallow: /history
+Disallow: /settings
+Disallow: /scan/meal
+Disallow: /scan/product
+
+# Link to sitemap
+Sitemap: https://calgpt.vercel.app/sitemap.xml

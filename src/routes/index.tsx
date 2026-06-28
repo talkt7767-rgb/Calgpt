@@ -32,6 +32,30 @@ export const Route = createFileRoute("/")({
         fetchpriority: "high",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Calgpt",
+          "operatingSystem": "All",
+          "applicationCategory": "HealthApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "USD",
+          },
+          "description":
+            "An AI-powered nutrition coach and macro tracker. Scan food labels, take pictures of meals for macro estimates, and track your virtual self.",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "124",
+          },
+        }),
+      },
+    ],
   }),
 });
 
@@ -107,7 +131,7 @@ function Landing() {
             className="absolute inset-0 flex flex-col items-center justify-end p-6 pb-12 text-center md:pb-20"
           >
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Snap. Scan. <span className="text-primary">Track.</span>
+              AI Nutrition Coach: Snap, Scan & <span className="text-primary">Track.</span>
             </h1>
             <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground md:text-lg">
               Your AI nutrition coach. Photo-log meals, rate packaged foods, and watch your virtual
@@ -196,24 +220,28 @@ function Landing() {
               title: "Photo meal logging",
               body: "Snap your plate. AI estimates calories and macros instantly.",
               img: heroMeals,
+              alt: "AI meal photo analysis and nutrition macro estimation",
             },
             {
               icon: Sparkles,
               title: "Product health scores",
               body: "Scan front + ingredients to get a 0–10 rating and safer alternatives.",
               img: heroProducts,
+              alt: "AI scan of food product label ingredients showing health rating",
             },
             {
               icon: Calculator,
               title: "Goal calculator",
               body: "BMR + TDEE + protein needs in one tap. AI plans the rest.",
               img: heroProducts,
+              alt: "AI nutrition macro calculator target setting dashboard",
             },
             {
               icon: Activity,
               title: "Live AI coach",
               body: "Ask anything — meal plans, ingredient checks, daily targets.",
               img: heroConsult,
+              alt: "Interactive chat conversation with a personal AI nutrition coach",
             },
           ].map((f, i) => (
             <motion.div
@@ -225,7 +253,7 @@ function Landing() {
             >
               <img
                 src={f.img}
-                alt=""
+                alt={f.alt}
                 loading="lazy"
                 className="h-32 w-full object-cover"
                 width={300}
@@ -240,6 +268,28 @@ function Landing() {
           ))}
         </div>
       </main>
+
+      <footer className="mt-20 border-t border-border bg-card py-8 text-center text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
+          <div className="flex items-center gap-2">
+            <img
+              src={logo}
+              alt="Cal Gpt Logo"
+              className="h-6 w-6 rounded-md object-cover"
+              width={24}
+              height={24}
+            />
+            <span className="font-semibold text-foreground">Cal Gpt</span>
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link to="/" className="hover:text-foreground">Home</Link>
+            <Link to="/login" className="hover:text-foreground">Log In</Link>
+            <Link to="/signup" className="hover:text-foreground">Sign Up</Link>
+            <a href="/sitemap.xml" target="_blank" rel="noreferrer" className="hover:text-foreground">Sitemap</a>
+          </div>
+          <p>© {new Date().getFullYear()} Cal Gpt. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

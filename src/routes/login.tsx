@@ -7,7 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import logo from "@/assets/calgpt-logo.png";
 
-export const Route = createFileRoute("/login")({ component: LoginPage });
+export const Route = createFileRoute("/login")({
+  component: LoginPage,
+  head: () => ({
+    meta: [
+      { title: "Log In | Calgpt — AI Nutrition Tracker" },
+      {
+        name: "description",
+        content:
+          "Log in to Calgpt to scan food labels, photo-log meals, and track your daily nutrition goals.",
+      },
+    ],
+  }),
+});
 
 function LoginPage() {
   const { signIn } = useAuth();
