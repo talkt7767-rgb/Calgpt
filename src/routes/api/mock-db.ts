@@ -6,31 +6,40 @@ import { checkRateLimit } from "../../lib/rate-limiter";
 
 const DB_FILE = path.join(process.cwd(), "mock-db.json");
 
+let memoryDb: any = null;
+
 function readDb() {
-  if (!fs.existsSync(DB_FILE)) {
-    return {
-      profiles: [],
-      meals: [],
-      product_scans: [],
-      saved_alternatives: [],
-      users: [],
-    };
+  if (memoryDb) {
+    return memoryDb;
   }
+
+  let db = {
+    profiles: [],
+    meals: [],
+    product_scans: [],
+    saved_alternatives: [],
+    users: [],
+  };
+
   try {
-    return JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
-  } catch {
-    return {
-      profiles: [],
-      meals: [],
-      product_scans: [],
-      saved_alternatives: [],
-      users: [],
-    };
+    if (fs.existsSync(DB_FILE)) {
+      db = JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
+    }
+  } catch (err) {
+    console.error("Failed to read mock-db.json, using empty in-memory DB:", err);
   }
+
+  memoryDb = db;
+  return db;
 }
 
 function writeDb(data: any) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+  memoryDb = data;
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("Failed to write mock-db.json (likely read-only filesystem), saved to memory only:", err);
+  }
 }
 
 function hashPassword(password: string): string {

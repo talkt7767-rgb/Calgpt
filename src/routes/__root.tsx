@@ -61,6 +61,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "description",
         content: "Snap meals, scan products, and chat with an AI nutrition expert.",
       },
+      {
+        name: "google-site-verification",
+        content: "oDbEjA5s5fWLQ95MIXPKuoT8hNxxN8MKXbGTQHUbSn0",
+      },
       { property: "og:title", content: "Cal Gpt — AI Nutrition Tracker" },
       { name: "twitter:title", content: "Cal Gpt — AI Nutrition Tracker" },
       {

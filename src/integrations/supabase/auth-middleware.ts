@@ -3,6 +3,8 @@ import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
+let middlewareMemoryDb: any = null;
+
 class ServerMockBuilder {
   private table: string;
   private userId: string;
@@ -93,18 +95,28 @@ class ServerMockBuilder {
     const DB_FILE = path.join(process.cwd(), "mock-db.json");
 
     const readDb = () => {
-      if (!fs.existsSync(DB_FILE)) {
-        return { profiles: [], meals: [], product_scans: [], saved_alternatives: [], users: [] };
+      if (middlewareMemoryDb) {
+        return middlewareMemoryDb;
       }
+      let db = { profiles: [], meals: [], product_scans: [], saved_alternatives: [], users: [] };
       try {
-        return JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
-      } catch {
-        return { profiles: [], meals: [], product_scans: [], saved_alternatives: [], users: [] };
+        if (fs.existsSync(DB_FILE)) {
+          db = JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
+        }
+      } catch (err) {
+        console.error("Failed to read mock-db.json in middleware readDb:", err);
       }
+      middlewareMemoryDb = db;
+      return db;
     };
 
     const writeDb = (data: any) => {
-      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+      middlewareMemoryDb = data;
+      try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), "utf-8");
+      } catch (err) {
+        console.warn("Failed to write mock-db.json in middleware writeDb (read-only filesystem):", err);
+      }
     };
 
     const db = readDb();
@@ -264,19 +276,25 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       const userId = token.replace("mock-token-", "");
       let email = "test_user_random@gmail.com";
       try {
-        const path = await import("path");
-        const fs = await import("fs");
-        const dbPath = path.join(process.cwd(), "mock-db.json");
-        if (fs.existsSync(dbPath)) {
-          const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
-          const user = db.users?.find((u: any) => u.id === userId);
+        if (middlewareMemoryDb) {
+          const user = middlewareMemoryDb.users?.find((u: any) => u.id === userId);
           if (user) email = user.email;
+        } else {
+          const path = await import("path");
+          const fs = await import("fs");
+          const dbPath = path.join(process.cwd(), "mock-db.json");
+          if (fs.existsSync(dbPath)) {
+            const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+            middlewareMemoryDb = db;
+            const user = db.users?.find((u: any) => u.id === userId);
+            if (user) email = user.email;
+          }
         }
       } catch (err) {
         console.error("Error reading mock db in middleware", err);
       }
 
-      const claims = { sub: userId, email };
+      const claims = { sub: userId, email: email as string | undefined };
       const mockSupabase = {
         from(table: string) {
           return new ServerMockBuilder(table, userId);
@@ -328,7 +346,10 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       context: {
         supabase,
         userId: data.claims.sub,
-        claims: data.claims,
+        claims: {
+          sub: data.claims.sub,
+          email: data.claims.email,
+        },
       },
     });
   },

@@ -32,6 +32,27 @@
       "target_carbs": 230,
       "target_fat": 65,
       "created_at": "2026-06-27T14:50:38.561Z"
+    },
+    {
+      "id": "mock-uid-fkve6ipamt8",
+      "email": "newuser_12345@example.com",
+      "target_calories": 2000,
+      "target_protein": 150,
+      "target_carbs": 230,
+      "target_fat": 65,
+      "created_at": "2026-06-28T04:14:11.104Z",
+      "avatar_gender": "female",
+      "avatar_skin": "medium",
+      "user_id": "mock-uid-fkve6ipamt8"
+    },
+    {
+      "id": "mock-uid-04m8wwyi7abx",
+      "email": "test_signup_1@example.com",
+      "target_calories": 2000,
+      "target_protein": 150,
+      "target_carbs": 230,
+      "target_fat": 65,
+      "created_at": "2026-06-28T04:21:53.750Z"
     }
   ],
   "meals": [],
@@ -46,12 +67,22 @@
     {
       "id": "mock-uid-htqdeyyq55s",
       "email": "test@example.com",
-      "password": "password123"
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
     },
     {
       "id": "mock-uid-7e7kkac4vdv",
       "email": "bmgtanmoy9@gmail.com",
       "password": "tanu@123"
+    },
+    {
+      "id": "mock-uid-fkve6ipamt8",
+      "email": "newuser_12345@example.com",
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
+    },
+    {
+      "id": "mock-uid-04m8wwyi7abx",
+      "email": "test_signup_1@example.com",
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
     }
   ]
 }

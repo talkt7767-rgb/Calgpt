@@ -18,6 +18,12 @@ const LANDING_VIDEO = "/landing-hero.mp4";
 export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
+    meta: [
+      {
+        name: "google-site-verification",
+        content: "oDbEjA5s5fWLQ95MIXPKuoT8hNxxN8MKXbGTQHUbSn0",
+      },
+    ],
     links: [
       {
         rel: "preload",
